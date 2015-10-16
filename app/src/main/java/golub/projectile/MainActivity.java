@@ -1,5 +1,6 @@
 package golub.projectile;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -30,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         imageView1 = (ImageView) findViewById(R.id.imageView1);
+
         Picasso.with(this).load("http://i.imgur.com/DvpvklR.png").into(imageView1);
 
         angle = (TextView) findViewById(R.id.angle);
@@ -44,15 +46,24 @@ public class MainActivity extends AppCompatActivity {
         buttonCalculate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Projectile p = new Projectile(Double.parseDouble(userAngle.getText().toString()),
-                         Double.parseDouble(userVelocity.getText().toString()),
-                        Double.parseDouble(userTime.getText().toString()));
-                double x = p.getX();
-                double y = p.getY();
-                answer.setText("X = " + x + " Y = " + y);
+                showAnswer();
 
             }
         });
+    }
+
+    private void showAnswer() {
+
+
+        Intent intent = new Intent(this, AnswerActivity.class);
+        double angle = Double.parseDouble(userAngle.getText().toString());
+        double velocity = Double.parseDouble(userVelocity.getText().toString());
+        double time = Double.parseDouble(userTime.getText().toString());
+        intent.putExtra("ANGLE", angle);
+        intent.putExtra("VELOCITY", velocity);
+        intent.putExtra("TIME", time);
+
+        startActivity(intent);
     }
 
     @Override
@@ -81,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
 
     }
+
+
 
 
 
