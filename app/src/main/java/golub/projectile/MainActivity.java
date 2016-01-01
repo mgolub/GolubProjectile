@@ -1,6 +1,7 @@
 package golub.projectile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,7 +17,7 @@ import com.squareup.picasso.Picasso;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView angle;
+   private TextView angle;
     private TextView velocity;
     private TextView time;
     private EditText userAngle;
@@ -26,10 +27,16 @@ public class MainActivity extends AppCompatActivity {
     private TextView answer;
     private ImageView imageView1;
 
+    private SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        preferences = this.getSharedPreferences("DEFAULT",MODE_PRIVATE);
+
+
         imageView1 = (ImageView) findViewById(R.id.imageView1);
 
         Picasso.with(this).load("http://i.imgur.com/DvpvklR.png").into(imageView1);
@@ -50,6 +57,29 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+    }
+    @Override
+    public void onPause(){
+        super.onPause();
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("ANGLE", userAngle.getText().toString());
+        editor.putString("VELOCITY", userVelocity.getText().toString());
+        editor.putString("TIME", userTime.getText().toString());
+        editor.apply();
+
+    }
+
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        userAngle.setText(preferences.getString("ANGLE",""));
+        userVelocity.setText(preferences.getString("VELOCITY",""));
+        userTime.setText(preferences.getString("TIME",""));
+
+
     }
 
     private void showAnswer() {
@@ -86,11 +116,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-    @Override
-    protected void onResume() {
-        super.onResume();
-
     }
 
 
